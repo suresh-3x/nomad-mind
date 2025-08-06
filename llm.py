@@ -20,6 +20,10 @@ Answer:"""
     )
     return result.stdout.decode()
 
+import chromadb
+
+client = chromadb.PersistentClient(path="db")
+collection = client.get_or_create_collection("videos")
 
 def generate_itinerary(selected_vid_ids):
     all_chunks = []

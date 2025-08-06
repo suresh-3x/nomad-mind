@@ -1,7 +1,7 @@
 import streamlit as st
 from ingest import download_and_transcribe
 from vectorstore import store_transcript
-from llm import query_llm
+from llm import generate_itinerary, query_llm
 
 st.set_page_config(page_title="NomadMind", layout="centered")
 st.title("🧭 NomadMind: Your AI Travel Agent")
@@ -56,20 +56,30 @@ import folium
 from streamlit_folium import st_folium
 from vectorstore import extract_locations
 
-if st.button("🗺️ Show Location Map"):
-    if selected_vids:
-        all_text = ""
-        for vid in selected_vids:
-            with open(f"memory/{vid}.txt") as f:
-                all_text += f.read()
-        locs = extract_locations(all_text)
-        m = folium.Map(location=[20, 0], zoom_start=2)
-        for name, (lat, lon) in locs.items():
-            folium.Marker([lat, lon], popup=name).add_to(m)
-        st_folium(m, width=700)
-    else:
-        st.warning("Select at least one video to map.")
+# if "show_map" not in st.session_state:
+#     st.session_state["show_map"] = False
 
+# # Button logic
+# if st.button("🗺️ Show Location Map"):
+#     st.session_state["show_map"] = True
+
+# if st.session_state["show_map"]:
+#     if selected_vids:
+#         all_text = ""
+#         for vid in selected_vids:
+#             with open(f"memory/{vid}.txt") as f:
+#                 all_text += f.read()
+#         locs = extract_locations(all_text)
+#         m = folium.Map(location=[20, 0], zoom_start=2)
+#         for name, (lat, lon) in locs.items():
+#             folium.Marker([lat, lon], popup=name).add_to(m)
+#         st_folium(m, width=700)
+#     else:
+#         st.warning("Select at least one video to map.")
+
+# if st.button("🔄 Reset Map"):
+#     st.session_state["show_map"] = False
+    
 
 if st.button("🧾 Generate 3-Day Itinerary"):
     if selected_vids:

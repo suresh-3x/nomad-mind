@@ -18,14 +18,16 @@ def download_and_transcribe(url, output_dir="memory"):
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
+        info = ydl.extract_info(url, download=False)
         video_id = info["id"]
         mp3_path = output_dir / f"{video_id}.mp3"
+        if not mp3_path.exists():
+            ydl.download([url])
     
     if not mp3_path.exists():
         raise FileNotFoundError(f"Expected audio file not found: {mp3_path}")
 
-    model = whisper.load_model("small")
+    model = whisper.load_model("base")
     result = model.transcribe(str(mp3_path))
 
     # Save transcript
